@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EFJI Shop — Quick Invite</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+    :root{
+      --bg-deep: #030406;
+      --bg-mid: #0b0d10;
+      --muted:#9fb0b9;
+      --accent:#7ee7c6;
+      --accent-2:#7c5cff;
+      --glass: rgba(255,255,255,0.04);
+      --white:#ffffff;
+      --text:#eaf4f1;
+      --dark-ink:#071018;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+      background: radial-gradient(800px 400px at 10% 15%, rgba(124,92,255,0.03), transparent),
+                  radial-gradient(600px 300px at 90% 85%, rgba(126,231,198,0.02), transparent),
+                  linear-gradient(180deg,var(--bg-deep), #060708 60%);
+      color:var(--text);
+      padding:28px;
+      overflow-x:hidden;
+    }
+
+    .splash{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:80;background:linear-gradient(180deg, rgba(1,3,5,0.96), rgba(1,3,5,0.98));backdrop-filter: blur(4px);transition:opacity .45s ease, visibility .45s ease;}
+    .splash-card{width:min(920px,94%);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:38px;border:1px solid rgba(255,255,255,0.05);box-shadow:0 24px 80px rgba(2,6,23,0.75);text-align:center}
+    .splash h1{font-size:30px;margin:0 0 6px;color:var(--white)}
+    .splash p{color:var(--muted);margin-bottom:18px}
+    .enter-btn{-webkit-appearance:none;border:0;padding:12px 22px;border-radius:12px;font-weight:700;cursor:pointer;background:linear-gradient(90deg,var(--white), #f3f3f3);color:#041017;box-shadow:0 12px 30px rgba(0,0,0,0.6);transition:transform .12s ease, box-shadow .12s ease}
+    .enter-btn:active{transform:translateY(2px)}
+
+    .site{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+    header.site-header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-radius:12px;background:linear-gradient(180deg,var(--white), #fbfbfb);border:1px solid rgba(0,0,0,0.06);box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+    .brand{display:flex;gap:14px;align-items:center}
+    .logo{width:56px;height:56px;border-radius:10px;background:transparent;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .brand h2{margin:0;font-size:18px;color:var(--dark-ink)}
+    .brand p{margin:0;color:var(--muted);font-size:13px}
+    .join-cta{padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--dark-ink);font-weight:700;cursor:pointer;text-decoration:none}
+
+    nav.side{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    nav.side ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+    nav.side button{display:block;padding:12px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--white);font-weight:700;cursor:pointer;text-align:left}
+    nav.side button:hover{background:rgba(126,231,198,0.03);color:var(--accent)}
+
+    main.content{background:transparent;padding:0}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);margin-bottom:18px}
+    .card h3{margin:0 0 10px 0;color:var(--white)}
+    .muted{color:var(--muted);font-size:13px}
+
+    .categories{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+    .cat{padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);cursor:pointer;transition:transform .14s ease, box-shadow .14s ease}
+    .cat:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(2,6,23,0.7)}
+    .cat h4{margin:0 0 8px 0;color:var(--white);font-weight:700}
+    .cat p{color:var(--muted);font-size:13px}
+
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.72);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:120;opacity:0;pointer-events:none;transition:opacity .22s ease}
+    .overlay.open{opacity:1;pointer-events:auto}
+    .modal{width:min(520px,94%);background:linear-gradient(180deg, var(--white), #fafafa);border-radius:12px;padding:22px;border:1px solid rgba(0,0,0,0.06);box-shadow:0 22px 60px rgba(2,6,23,0.7);transform:translateY(10px);transition:transform .22s cubic-bezier(.2,.9,.3,1),opacity .22s ease;color:var(--dark-ink)}
+    .overlay.open .modal{transform:translateY(0)}
+    .modal h3{margin-top:0;color:var(--dark-ink)}
+    .modal p{color:#28323a;margin-bottom:18px}
+    .modal .actions{display:flex;gap:10px;justify-content:flex-end}
+    .btn-ghost{padding:10px 14px;border-radius:10px;border:1px solid rgba(7,16,24,0.06);background:transparent;color:#28323a;cursor:pointer}
+    .btn-cta{padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:var(--dark-ink);font-weight:700;cursor:pointer;text-decoration:none}
+
+    @media (max-width:760px){.site{grid-template-columns:1fr} .categories{grid-template-columns:1fr} nav.side{order:2}}
+    footer{grid-column:1/-1;text-align:center;color:var(--muted);font-size:13px;margin-top:6px}
+  </style>
+</head>
+<body>
+  <div class="splash" id="splash">
+    <div class="splash-card">
+      <h1>Welcome to EFJI Shop</h1>
+      <p class="muted">Click Enter to view categories. Proceed to Discord to buy.</p>
+      <div style="display:flex;gap:12px;justify-content:center">
+        <button class="enter-btn" id="enterBtn">Enter Shop</button>
+      </div>
+      <p class="muted" style="margin-top:12px;font-size:13px">Server: <strong>EFJI</strong> • Members: <strong id="memberCount">661</strong></p>
+    </div>
+  </div>
+
+  <div class="site" id="site" style="visibility:hidden;opacity:0">
+    <header class="site-header">
+      <div class="brand">
+        <div class="logo"><img src="Black_And_White_Modern_Typographic_Simple_Virus_Apparel_Logo.png" alt="EFJI logo" style="width:100%;height:100%;object-fit:contain;border-radius:8px;"></div>
+        <div>
+          <h2>EFJI Shop</h2>
+          <p class="muted">Discord store • Services • Quick invite</p>
+        </div>
+      </div>
+      <div class="center">
+        <div style="text-align:right">
+          <div style="font-weight:700;color:var(--dark-ink)">EFJI</div>
+          <div class="muted">661 members</div>
+        </div>
+        <a href="https://discord.gg/pbVn4sB7" target="_blank" class="join-cta" style="margin-left:12px">Join Discord</a>
+      </div>
+    </header>
+
+    <nav class="side" aria-label="Categories">
+      <ul>
+        <li><button data-cat="discord-items">Discord Items</button></li>
+        <li><button data-cat="game-credits">Game Credits</button></li>
+        <li><button data-cat="premium-accounts">Premium Accounts</button></li>
+        <li><button data-cat="social-boost">Social Media Boost</button></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <section class="card" id="home">
+        <h3>Welcome • EFJI Shop</h3>
+        <p class="muted">Select a category on the left to see how to buy. For security and instant support, all purchases are handled inside our Discord server.</p>
+
+        <div class="categories">
+          <div class="cat" data-cat="discord-items"><h4>Discord Items</h4><p>Avatar deco, nameplates, & effects — discounted tiers.</p></div>
+          <div class="cat" data-cat="game-credits"><h4>Game Credits</h4><p>Top-up credits and in-game items. Fast delivery.</p></div>
+          <div class="cat" data-cat="premium-accounts"><h4>Premium Accounts</h4><p>Netflix, Spotify, Disney+, and more — shared or solo.</p></div>
+          <div class="cat" data-cat="social-boost"><h4>Social Media Boost</h4><p>TikTok, Instagram, YouTube boosting services.</p></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>How to Buy</h3>
+        <p class="muted">1) Click any category on the left or in the grid.<br>2) A prompt will ask you to proceed to our Discord server to complete your order.<br>3) Join EFJI and place your order in <strong>#orders</strong>.</p>
+        <p class="muted">This helps us verify payments quickly and provide warranty/support.</p>
+      </section>
+
+      <footer>© EFJI Shop • Proceed to the Discord server to buy • Prices subject to change</footer>
+    </main>
+  </div>
+
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h3 id="modalTitle">Proceed to Discord to Buy</h3>
+      <p class="muted" id="modalText">You selected <strong id="selectedCat">a category</strong>. To complete purchases and receive support, proceed to our Discord server.</p>
+      <div class="actions">
+        <button class="btn-ghost" id="cancelBtn">Cancel</button>
+        <a id="joinLink" class="btn-cta" href="https://discord.gg/pbVn4sB7" target="_blank" rel="noopener noreferrer">Proceed to Discord Server</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const splash = document.getElementById('splash');
+    const site = document.getElementById('site');
+    const enterBtn = document.getElementById('enterBtn');
+    const overlay = document.getElementById('overlay');
+    const modalText = document.getElementById('modalText');
+    const selectedCat = document.getElementById('selectedCat');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const joinLink = document.getElementById('joinLink');
+
+    enterBtn.addEventListener('click', ()=>{
+      splash.style.opacity='0';
+      splash.style.visibility='hidden';
+      site.style.visibility='visible';
+      site.style.opacity='1';
+    });
+
+    function openModal(catName){
+      selectedCat.textContent = catName;
+      modalText.textContent = `You selected ${catName}. To place an order, please proceed to our Discord server where we handle purchases.`;
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden','false');
+      joinLink.focus();
+    }
+
+    document.querySelectorAll('[data-cat]').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const name = el.getAttribute('data-cat');
+        const pretty = name.replace(/-/g,' ').replace(/\b\w/g, c=>c.toUpperCase());
+        openModal(pretty);
+      });
+    });
+
+    cancelBtn.addEventListener('click', ()=>{
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden','true');
+    });
+
+    overlay.addEventListener('click', (e)=>{
+      if(e.target === overlay) { overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); }
+    });
+
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') { overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); } });
+
+    document.getElementById('memberCount').textContent = '661';
+  </script>
+</body>
+</html>
